@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>                                                                       
+
+int* treeInput(int*);
+void treeOutput(int*, int);
+void getPrufer(int*, int, int*, int*);
+void printPrufer(int*, int);
+
+int i, j, k;
+int* treeInput(int* n){		 //Nhap vao cay duoi dang danh sach canh
+	int* B = NULL;
+	
+	printf("Nhap vao so canh cua cay:");
+	do{
+		scanf("%d", &k);
+		if(k < 0){
+			system("cls");
+			printf("\nBan da nhap sai moi nhap lai!");
+			printf("\nNhap vao so canh cua cay:");
+		}
+	}while(k < 0 || k >= 50000);
+
+	if(k == 0){
+		printf("\nKhong co ma PruferCode !");
+		getch();
+		exit(0);
+	}
+	else if(k == 1){
+		printf("\nPrufer Code: %d",0);
+		getch();
+		exit(0);
+	}
+	
+	B = (int*)(malloc(2*k*sizeof(int)));
+	for(i = 0; i < k; i++){
+		printf("\nNhap vao canh thu %d cua cay vi du (x y):", i+1);
+		for(j = 0; j < 2; j++){
+			
+			scanf("%d", &B[i*2+j]);
+		}
+	}
+	*n = k;
+	return B;
+}
+
+void treeOutput(int* A, int n){		//In ra cay vua nhap vao
+	printf("\nCay vua nhap:\n");
+	for(i = 0; i < n; i++){
+		for(j = 0; j < 2; j++){
+			printf("\t%d", A[2*i+j]);
+		}
+		printf("\n");
+	}
+}
+
+void getPrufer(int* A, int n, int* Prufer, int* p){		//Tao PruferCode
+	int tmp, dem = 0;
+	
+	for(k = 1; k <= n; k++){
+		int x, y;
+		for(i = 0; i < n; i++){
+			for(j = 0; j < 2; j++){
+				if(k == A[2*i+j]){
+					tmp = A[2*i+j];
+					x = i;
+					y = j;
+					dem++;
+				}
+			}
+		}
+		if(dem == 1){
+			if(y == 1){
+				Prufer[*p] = A[2*x+0];
+			}
+			else{
+				Prufer[*p] = A[2*x+1];
+			}
+			A[2*x+0] = A[2*x+1] = 0;
+			(*p)++;
+			return;
+		}
+		dem = 0;
+	}
+}
+
+void printPrufer(int* Prufer, int p){		//In PruferCode
+	printf("\nPrufer Code:");
+	for(i = 0; i < p; i++){
+		printf(" %d", Prufer[i]);
+	}
+}
+
+int main(){
+	int* A;
+	int n;
+	int* Prufer;
+	int p = 0;
+	
+	A = treeInput(&n);
+	treeOutput(A, n);
+	
+	Prufer = (int*)(malloc(sizeof(int)*n));
+	for(int h = 0; h < n ; h++){
+		getPrufer(A, n, Prufer, &p);
+	}
+		
+		printPrufer(Prufer, --p);
+
+	getch();
+	return 0;
+}
